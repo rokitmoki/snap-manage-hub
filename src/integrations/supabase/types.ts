@@ -14,13 +14,200 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      departments: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      processes: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          id: string
+          note: string | null
+          process_number: number
+          token_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          process_number?: number
+          token_id: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          process_number?: number
+          token_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "processes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "processes_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      token_departments: {
+        Row: {
+          department_id: string
+          token_id: string
+        }
+        Insert: {
+          department_id: string
+          token_id: string
+        }
+        Update: {
+          department_id?: string
+          token_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "token_departments_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "token_departments_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tokens: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          label: string | null
+          token: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          label?: string | null
+          token: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          label?: string | null
+          token?: string
+        }
+        Relationships: []
+      }
+      uploads: {
+        Row: {
+          created_at: string
+          file_path: string
+          id: string
+          mime_type: string | null
+          process_id: string
+          size: number | null
+        }
+        Insert: {
+          created_at?: string
+          file_path: string
+          id?: string
+          mime_type?: string | null
+          process_id: string
+          size?: number | null
+        }
+        Update: {
+          created_at?: string
+          file_path?: string
+          id?: string
+          mime_type?: string | null
+          process_id?: string
+          size?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "uploads_process_id_fkey"
+            columns: ["process_id"]
+            isOneToOne: false
+            referencedRelation: "processes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_upload: {
+        Args: { process: string; file_path: string; mime: string; size: number }
+        Returns: {
+          created_at: string
+          file_path: string
+          id: string
+          mime_type: string | null
+          process_id: string
+          size: number | null
+        }
+      }
+      start_process: {
+        Args: { token_value: string; category: string; note: string }
+        Returns: {
+          category_id: string | null
+          created_at: string
+          id: string
+          note: string | null
+          process_number: number
+          token_id: string
+        }
+      }
     }
     Enums: {
       [_ in never]: never
