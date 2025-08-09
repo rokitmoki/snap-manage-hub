@@ -104,6 +104,7 @@ const Admin = () => {
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <a href="/" className="underline text-sm">Zurück</a>
+            <a href="/uploads" className="underline text-sm">Uploads</a>
             <h1 className="text-3xl font-semibold">Admin</h1>
           </div>
           <Button variant="outline" onClick={signOut}>Abmelden</Button>
