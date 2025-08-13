@@ -19,16 +19,19 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          notes_required: boolean
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
+          notes_required?: boolean
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
+          notes_required?: boolean
         }
         Relationships: []
       }
@@ -49,6 +52,48 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      messages: {
+        Row: {
+          channel_id: string
+          content: string | null
+          created_at: string | null
+          id: string
+          image_url: string | null
+          token_id: string
+        }
+        Insert: {
+          channel_id: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          token_id: string
+        }
+        Update: {
+          channel_id?: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          token_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "tokens"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       processes: {
         Row: {
@@ -126,6 +171,7 @@ export type Database = {
         Row: {
           active: boolean
           created_at: string
+          email: string | null
           id: string
           label: string | null
           token: string
@@ -133,6 +179,7 @@ export type Database = {
         Insert: {
           active?: boolean
           created_at?: string
+          email?: string | null
           id?: string
           label?: string | null
           token: string
@@ -140,6 +187,7 @@ export type Database = {
         Update: {
           active?: boolean
           created_at?: string
+          email?: string | null
           id?: string
           label?: string | null
           token?: string
@@ -196,6 +244,10 @@ export type Database = {
           process_id: string
           size: number | null
         }
+      }
+      is_member_of_department: {
+        Args: { p_token_id: string; p_department_id: string }
+        Returns: boolean
       }
       start_process: {
         Args: { token_value: string; category: string; note: string }

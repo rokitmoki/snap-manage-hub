@@ -19,6 +19,7 @@ const Admin = () => {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [tokens, setTokens] = useState<any[]>([]);
   const [label, setLabel] = useState("");
+  const [tokenEmail, setTokenEmail] = useState("");
   const [deptName, setDeptName] = useState("");
   const [selectedDeptIds, setSelectedDeptIds] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -67,7 +68,11 @@ const Admin = () => {
     setBusy(true);
     try {
       const token = genToken();
-      const { data: tok, error } = await supabase.from("tokens").insert({ token, label: label || null }).select("id").maybeSingle();
+      const { data: tok, error } = await supabase.from("tokens").insert({ 
+        token, 
+        label: label || null,
+        email: tokenEmail || null 
+      }).select("id").maybeSingle();
       if (error) throw error;
       if (tok && selectedDeptIds.length) {
         const rows = selectedDeptIds.map((d) => ({ token_id: tok.id, department_id: d }));
@@ -75,6 +80,7 @@ const Admin = () => {
         if (pe) throw pe;
       }
       setLabel("");
+      setTokenEmail("");
       setSelectedDeptIds([]);
       toast({ title: "Token erstellt", description: token });
       await refreshAll();
@@ -119,6 +125,10 @@ const Admin = () => {
               <div className="space-y-2">
                 <Label>Bezeichnung (optional)</Label>
                 <Input placeholder="z. B. Fahrer A" value={label} onChange={(e) => setLabel(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>E-Mail für Benachrichtigungen (optional)</Label>
+                <Input placeholder="z. B. fahrer@firma.de" value={tokenEmail} onChange={(e) => setTokenEmail(e.target.value)} />
               </div>
               <div className="space-y-2">
                 <Label>Abteilungen (optional)</Label>

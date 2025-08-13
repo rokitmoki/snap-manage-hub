@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import UploadDropzone from "@/components/UploadDropzone";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -16,6 +17,7 @@ const Index = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [busy, setBusy] = useState(false);
+  const [emailNotification, setEmailNotification] = useState(false);
 
   useEffect(() => {
     document.title = "Allgemeine Uploads | Snap Manage Hub";
@@ -115,9 +117,20 @@ const Index = () => {
                 </Select>
               </div>
 
-              <div className="md:col-span-2 space-y-2">
+              <div className="space-y-2">
                 <Label>Notiz (optional)</Label>
                 <Textarea placeholder="Gilt für alle neu hochgeladenen Bilder dieses Vorgangs" value={note} onChange={(e) => setNote(e.target.value)} />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="email-notification"
+                    checked={emailNotification}
+                    onCheckedChange={setEmailNotification}
+                  />
+                  <Label htmlFor="email-notification">E-Mail Benachrichtigung nach Upload</Label>
+                </div>
               </div>
             </div>
 
