@@ -68,10 +68,49 @@ const Index = () => {
         if (metaErr) throw metaErr;
       }
 
+      // Send email notification if enabled
+      if (emailNotification) {
+        try {
+          // Get token details to fetch email
+          const { data: tokenData } = await supabase
+            .from("tokens")
+            .select("email")
+            .eq("token", token.trim())
+            .single();
+
+          if (tokenData?.email) {
+            // Get category name
+            const { data: categoryData } = await supabase
+              .from("categories")
+              .select("name")
+              .eq("id", categoryId)
+              .single();
+
+            await supabase.functions.invoke("send-notification", {
+              body: {
+                email: tokenData.email,
+                processNumber: p.process_number,
+                category: categoryData?.name || "Unbekannt",
+                fileCount: files.length,
+                note: note || undefined,
+              },
+            });
+            
+            console.log("Email notification sent successfully");
+          } else {
+            console.warn("No email associated with token, skipping notification");
+          }
+        } catch (emailError) {
+          console.error("Failed to send email notification:", emailError);
+          // Don't fail the upload if email fails
+        }
+      }
+
       toast({ title: "Upload erfolgreich", description: `Vorgang #${p.process_number} wurde erstellt.` });
       // reset
       setFiles([]);
       setNote("");
+      setEmailNotification(false);
       // keep token and category for next run
     } catch (e: any) {
       toast({ title: "Fehler beim Upload", description: e.message ?? String(e) });
