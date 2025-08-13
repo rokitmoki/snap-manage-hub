@@ -191,10 +191,10 @@ const UploadsPage = () => {
         <div className="grid gap-4 md:grid-cols-3">
           <div>
             <label className="block text-sm mb-2">Abteilung</label>
-            <Select value={deptFilter ?? ""} onValueChange={(v) => setDeptFilter(v || null)}>
+            <Select value={deptFilter ?? "all"} onValueChange={(v) => setDeptFilter(v === "all" ? null : v)}>
               <SelectTrigger><SelectValue placeholder="Alle" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Alle</SelectItem>
+                <SelectItem value="all">Alle</SelectItem>
                 {(data?.deps || []).map((d) => (
                   <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
                 ))}
@@ -203,10 +203,10 @@ const UploadsPage = () => {
           </div>
           <div>
             <label className="block text-sm mb-2">Upload-Token</label>
-            <Select value={tokenFilter ?? ""} onValueChange={(v) => setTokenFilter(v || null)}>
+            <Select value={tokenFilter ?? "all"} onValueChange={(v) => setTokenFilter(v === "all" ? null : v)}>
               <SelectTrigger><SelectValue placeholder="Alle" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Alle</SelectItem>
+                <SelectItem value="all">Alle</SelectItem>
                 {(data?.toks || []).map((t) => (
                   <SelectItem key={t.id} value={t.id}>{t.label ? `${t.label} (${t.token})` : t.token}</SelectItem>
                 ))}
@@ -215,10 +215,10 @@ const UploadsPage = () => {
           </div>
           <div>
             <label className="block text-sm mb-2">Kategorie</label>
-            <Select value={categoryFilter ?? ""} onValueChange={(v) => setCategoryFilter(v || null)}>
+            <Select value={categoryFilter ?? "all"} onValueChange={(v) => setCategoryFilter(v === "all" ? null : v)}>
               <SelectTrigger><SelectValue placeholder="Alle" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Alle</SelectItem>
+                <SelectItem value="all">Alle</SelectItem>
                 {(data?.cats || []).map((c) => (
                   <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                 ))}
